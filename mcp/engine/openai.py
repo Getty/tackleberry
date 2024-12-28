@@ -1,5 +1,4 @@
 from typing import Any, Union, Dict, List, Optional
-from openai import OpenAI
 import os
 
 from . import MCPEngine
@@ -12,6 +11,7 @@ class MCPEngineOpenai(MCPEngine):
         self.api_key = api_key or os.environ.get("OPENAI_API_KEY")
         if not isinstance(self.api_key, str) or len(self.api_key) < 51:
             raise Exception("OpenAI needs api_key (OPENAI_API_KEY)")
+        from openai import OpenAI
         self.client = OpenAI(api_key=self.api_key)
 
     def update_models(self):

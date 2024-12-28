@@ -1,5 +1,4 @@
 from typing import Any, Union, Dict, List, Optional
-from anthropic import Anthropic
 import os
 
 from . import MCPEngine
@@ -14,6 +13,7 @@ class MCPEngineAnthropic(MCPEngine):
         self.api_key = api_key or os.environ.get("ANTHROPIC_API_KEY")
         if not isinstance(self.api_key, str) or len(self.api_key) < 51:
             raise Exception("Anthropic needs api_key (ANTHROPIC_API_KEY)")
+        from anthropic import Anthropic
         self.client = Anthropic(api_key=self.api_key)
         self.max_tokens = max_tokens or MCPEngineAnthropic.default_max_tokens
 

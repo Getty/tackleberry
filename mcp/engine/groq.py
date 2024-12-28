@@ -1,5 +1,4 @@
 from typing import Any, Union, Dict, List, Optional
-from groq import Groq
 import os
 
 from . import MCPEngine
@@ -12,6 +11,7 @@ class MCPEngineGroq(MCPEngine):
         self.api_key = api_key or os.environ.get("GROQ_API_KEY")
         if not isinstance(self.api_key, str) or len(self.api_key) < 51:
             raise Exception("Groq needs api_key (GROQ_API_KEY)")
+        from groq import Groq
         self.client = Groq(api_key=self.api_key)
 
     def update_models(self):
