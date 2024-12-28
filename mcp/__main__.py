@@ -27,13 +27,15 @@ class MCPMain:
     ):
         model_parts = model.split('/')
         if len(model_parts) > 1:
-            engine_class = model_parts.pop()
-            model = model_parts.pop()
+            engine_class = model_parts.pop(0)
+            model = model_parts.pop(0)
         else:
             engine_class = self.registry.get_engine_by_model(model)
         if engine_class is None:
             raise Exception(f"Can't find engine for model '{model}'")
         engine = self.engine(engine_class)
+        if engine is None:
+            raise Exception(f"Can't find engine for engine class '{engine_class}'")
         return engine.model(model)
 
     def engine(self,
