@@ -17,7 +17,7 @@ class MCPEngineGroq(MCPEngine):
     def update_models(self):
         self.models = []
         for model in self.client.models.list().data:
-            models.append(model.id)
+            self.models.append(model.id)
         self.models.sort()
 
     def __str__(self):
