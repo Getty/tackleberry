@@ -1,3 +1,3 @@
-# MCP
+# Master Control Program
 
-![Master Control Program](mcp.png)
+![Master Control Program factory image](mcp.jpg)
