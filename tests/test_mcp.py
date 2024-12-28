@@ -31,6 +31,8 @@ class TestMCP(unittest.TestCase):
             self.assertEqual(type(model).__name__, "MCPModel")
             self.assertIsInstance(model.engine, MCPEngine)
             self.assertEqual(type(model.engine).__name__, "MCPEngineOpenai")
+            models = engine.get_models()
+            self.assertTrue(len(models) > 20)
         else:
             warnings.warn("Can't test OpenAI engine without OPENAI_API_KEY", UserWarning)
     
@@ -51,6 +53,8 @@ class TestMCP(unittest.TestCase):
             self.assertEqual(type(model).__name__, "MCPModel")
             self.assertIsInstance(model.engine, MCPEngine)
             self.assertEqual(type(model.engine).__name__, "MCPEngineAnthropic")
+            models = engine.get_models()
+            self.assertTrue(len(models) > 3)
         else:
             warnings.warn("Can't test Anthropic engine without ANTHROPIC_API_KEY", UserWarning)
     
@@ -71,8 +75,10 @@ class TestMCP(unittest.TestCase):
             self.assertEqual(type(model).__name__, "MCPModel")
             self.assertIsInstance(model.engine, MCPEngine)
             self.assertEqual(type(model.engine).__name__, "MCPEngineGroq")
+            models = engine.get_models()
+            self.assertTrue(len(models) > 10)
         else:
-            warnings.warn("Can't test Anthropic engine without GROQ_API_KEY", UserWarning)
+            warnings.warn("Can't test Groq engine without GROQ_API_KEY", UserWarning)
 
     def test_010_registry(self):
         """Test registry"""
