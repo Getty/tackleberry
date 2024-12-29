@@ -107,7 +107,6 @@ class TestMCP(unittest.TestCase):
             'content': 'you are an assistant',
             'role': 'system',
         }])
-
         sys_context = MCP.context("you are an assistant that hates his work")
         self.assertIsInstance(sys_context, MCPContext)
         self.assertTrue(len(sys_context.messages) == 1)

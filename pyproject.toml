@@ -1,6 +1,6 @@
 [project]
 name = "mcp"
-version = "0.1.0"
+version = "0.1.0.dev0"
 description = "The Master Control Program (or MCP) is helping you abstract the access to AI"
 authors = [
     { name = "Torsten Raudßus", email = "torsten@raudssus.de" },
