@@ -39,7 +39,7 @@ class MCPRegistry:
     def add_engine(self, name: str, engine: MCPEngine = None):
         self._engines[name] = engine
         self._update_models()
-        return self._engines[name]
+        return self
 
     def __str__(self):
         return f"MCP Registry {self.name}"

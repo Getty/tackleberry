@@ -4,6 +4,7 @@ import os
 from mcp import MCP
 from mcp.engine import MCPEngine
 from mcp.model import MCPModel
+from mcp.context import MCPContext, MCPMessage
 
 class TestMCP(unittest.TestCase):
 
@@ -59,7 +60,7 @@ class TestMCP(unittest.TestCase):
             warnings.warn("Can't test Anthropic engine without ANTHROPIC_API_KEY", UserWarning)
     
     def test_003_groq(self):
-        """Test Anthropic"""
+        """Test Groq"""
         if os.environ.get("GROQ_API_KEY"):
             engine = MCP.engine('groq')
             self.assertIsInstance(engine, MCPEngine)
@@ -80,9 +81,50 @@ class TestMCP(unittest.TestCase):
         else:
             warnings.warn("Can't test Groq engine without GROQ_API_KEY", UserWarning)
 
+    def test_004_ollama(self):
+        """Test Ollama"""
+        if os.environ.get("OLLAMA_HOST") or os.environ.get("OLLAMA_PROXY_URL"):
+            engine = MCP.engine('ollama')
+            self.assertIsInstance(engine, MCPEngine)
+            self.assertEqual(type(engine).__name__, "MCPEngineOllama")
+            models = engine.get_models()
+            self.assertTrue(len(models) > 0)
+        else:
+            warnings.warn("Can't test Ollama engine without explicit setting OLLAMA_HOST or OLLAMA_PROXY_URL", UserWarning)
+
     def test_010_registry(self):
         """Test registry"""
         self.assertEqual(MCP.count, 1)
+
+    def test_020_context(self):
+        """Test context"""
+        nosys_context = MCP.context()
+        self.assertIsInstance(nosys_context, MCPContext)
+        self.assertTrue(len(nosys_context.messages) == 0)
+        nosys_context.add_system("you are an assistant")
+        self.assertTrue(len(nosys_context.messages) == 1)
+        self.assertEqual(nosys_context.to_messages(), [{
+            'content': 'you are an assistant',
+            'role': 'system',
+        }])
+
+        sys_context = MCP.context("you are an assistant that hates his work")
+        self.assertIsInstance(sys_context, MCPContext)
+        self.assertTrue(len(sys_context.messages) == 1)
+        sys_context.add_assistant("roger rabbit is a fictional animated anthropomorphic rabbit")
+        self.assertTrue(len(sys_context.messages) == 2)
+        sys_context.add_user("who is roger rabbit?")
+        self.assertTrue(len(sys_context.messages) == 3)
+        self.assertEqual(sys_context.to_messages(), [{
+            'content': 'you are an assistant that hates his work',
+            'role': 'system',
+        }, {
+            'content': 'roger rabbit is a fictional animated anthropomorphic rabbit',
+            'role': 'assistant',
+        }, {
+            'content': 'who is roger rabbit?',
+            'role': 'user',
+        }])
 
 if __name__ == "__main__":
     unittest.main()

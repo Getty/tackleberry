@@ -3,6 +3,7 @@ from importlib import import_module
 
 from .registry import MCPRegistry
 from .engine import MCPEngine
+from .context import MCPContext
 
 class MCPMain:
     count = 0
@@ -19,6 +20,11 @@ class MCPMain:
 
     def __str__(self):
         return f"MCPMain instance {self.name}"
+
+    def context(self,
+        system_prompt: Optional[str] = None,
+    ):
+        return MCPContext(system_prompt)
 
     def model(self,
         model: str,
