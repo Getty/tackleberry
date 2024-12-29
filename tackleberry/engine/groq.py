@@ -1,19 +1,19 @@
 from typing import Any, Union, Dict, List, Optional
 import os
 
-from . import MCPEngine
+from . import TBEngine
 
-class MCPEngineOpenai(MCPEngine):
+class TBEngineGroq(TBEngine):
 
     def __init__(self,
         api_key: str = None,
         **kwargs,
     ):
-        self.api_key = api_key or os.environ.get("OPENAI_API_KEY")
+        self.api_key = api_key or os.environ.get("GROQ_API_KEY")
         if not isinstance(self.api_key, str) or len(self.api_key) < 51:
-            raise Exception("OpenAI needs api_key (OPENAI_API_KEY)")
-        from openai import OpenAI
-        self.client = OpenAI(
+            raise Exception("Groq needs api_key (GROQ_API_KEY)")
+        from groq import Groq
+        self.client = Groq(
             api_key=self.api_key,
             **kwargs,
         )
@@ -26,4 +26,4 @@ class MCPEngineOpenai(MCPEngine):
         return models
 
     def __str__(self):
-        return f"MCP Engine OpenAI {hex(id(self))}"
+        return f"TB Engine Groq {hex(id(self))}"

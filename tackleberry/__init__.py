@@ -1,9 +1,9 @@
 from importlib.metadata import version
-from mcp.__main__ import MCP
+from .__main__ import TB
 
-__all__ = ['MCP']
+__all__ = ['TB']
 
 try:
-    __version__ = version("mcp")
+    __version__ = version("tackleberry")
 except ImportError:
     __version__ = "0.0.0"

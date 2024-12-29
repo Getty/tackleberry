@@ -122,7 +122,7 @@ for provider in models:
 pprint(models)
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-yaml_path = os.path.join(current_dir, '..', 'mcp', 'registry.yaml')
+yaml_path = os.path.join(current_dir, '..', 'tackleberry', 'registry.yaml')
 yaml_path = os.path.normpath(yaml_path)
 
 with open(yaml_path, 'w') as file:

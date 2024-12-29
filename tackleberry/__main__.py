@@ -1,30 +1,30 @@
 from typing import Any, Dict, Optional
 from importlib import import_module
 
-from .registry import MCPRegistry
-from .engine import MCPEngine
-from .context import MCPContext
+from .registry import TBRegistry
+from .engine import TBEngine
+from .context import TBContext
 
-class MCPMain:
+class TBMain:
     count = 0
-    registry = MCPRegistry('__main__')
+    registry = TBRegistry('__main__')
 
     def __init__(self,
         name: Optional[str] = None,
-        registry: Optional[MCPRegistry] = None,
+        registry: Optional[TBRegistry] = None,
     ):
-        MCPMain.count += 1
-        self.name = name or f'MCP-{MCPMain.count}'
-        self.registry = registry if registry else MCPMain.registry
+        TBMain.count += 1
+        self.name = name or f'TB-{TBMain.count}'
+        self.registry = registry if registry else TBMain.registry
         self.engines = {}
 
     def __str__(self):
-        return f"MCPMain instance {self.name}"
+        return f"TBMain instance {self.name}"
 
     def context(self,
         system_prompt: Optional[str] = None,
     ):
-        return MCPContext(system_prompt)
+        return TBContext(system_prompt)
 
     def model(self,
         model: str,
@@ -51,17 +51,17 @@ class MCPMain:
             return self.engines[engine_class]
         try:
             from importlib import import_module
-            from_list = [f"MCPEngine{engine_class.title()}"]
+            from_list = [f"TBEngine{engine_class.title()}"]
             mod = import_module(f".engine.{engine_class}", package=__package__)
             self.engines[engine_class] = getattr(mod, from_list[0])(**kwargs)
         except ImportError:
-            mod = import_module(f"mcp.engine.{engine_class}")
-            self.engines[engine_class] = getattr(mod, f"MCPEngine{engine_class.title()}")(**kwargs)
-        if isinstance(self.engines[engine_class], MCPEngine):
+            mod = import_module(f"tackleberry.engine.{engine_class}")
+            self.engines[engine_class] = getattr(mod, f"TBEngine{engine_class.title()}")(**kwargs)
+        if isinstance(self.engines[engine_class], TBEngine):
             return self.engines[engine_class]
         else:
             raise Exception(f"Can't find engine '{engine_class}'")
 
-MCP = MCPMain()
+TB = TBMain()
 
-__all__ = ['MCP']
+__all__ = ['TB']

@@ -3,9 +3,9 @@ import uuid
 import yaml
 import os
 
-from .engine import MCPEngine
+from .engine import TBEngine
 
-class MCPRegistry:
+class TBRegistry:
 
     def __init__(self, name: Optional[str] = None):
         if name is None:
@@ -36,10 +36,10 @@ class MCPRegistry:
     def get_engine_by_model(self, model: str):
         return self._models[model]
 
-    def add_engine(self, name: str, engine: MCPEngine = None):
+    def add_engine(self, name: str, engine: TBEngine = None):
         self._engines[name] = engine
         self._update_models()
         return self
 
     def __str__(self):
-        return f"MCP Registry {self.name}"
+        return f"TB Registry {self.name}"

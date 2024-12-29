@@ -1,22 +1,25 @@
 from typing import Any, Union, Dict, List, Optional
 import os
 
-from . import MCPEngine
+from . import TBEngine
 
-class MCPEngineGroq(MCPEngine):
+class TBEngineAnthropic(TBEngine):
+    default_max_tokens = 256
 
     def __init__(self,
         api_key: str = None,
+        max_tokens: int = None,
         **kwargs,
     ):
-        self.api_key = api_key or os.environ.get("GROQ_API_KEY")
+        self.api_key = api_key or os.environ.get("ANTHROPIC_API_KEY")
         if not isinstance(self.api_key, str) or len(self.api_key) < 51:
-            raise Exception("Groq needs api_key (GROQ_API_KEY)")
-        from groq import Groq
-        self.client = Groq(
+            raise Exception("Anthropic needs api_key (ANTHROPIC_API_KEY)")
+        from anthropic import Anthropic
+        self.client = Anthropic(
             api_key=self.api_key,
             **kwargs,
         )
+        self.max_tokens = max_tokens or TBEngineAnthropic.default_max_tokens
 
     def get_models(self):
         models = []
@@ -26,4 +29,4 @@ class MCPEngineGroq(MCPEngine):
         return models
 
     def __str__(self):
-        return f"MCP Engine Groq {hex(id(self))}"
+        return f"TB Engine Anthropic {hex(id(self))}"

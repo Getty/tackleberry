@@ -3,9 +3,9 @@ import os
 from urllib.parse import urlparse
 import base64
 
-from . import MCPEngine
+from . import TBEngine
 
-class MCPEngineOllama(MCPEngine):
+class TBEngineOllama(TBEngine):
 
     def __init__(self,
         url: str = None,
@@ -51,4 +51,4 @@ class MCPEngineOllama(MCPEngine):
         return models
 
     def __str__(self):
-        return f"MCP Engine Ollama {hex(id(self))}"
+        return f"TB Engine Ollama {hex(id(self))}"

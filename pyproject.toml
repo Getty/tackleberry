@@ -1,7 +1,7 @@
 [project]
-name = "mcp"
+name = "tackleberry"
 version = "0.1.0.dev0"
-description = "The Master Control Program (or MCP) is helping you abstract the access to AI"
+description = "Tackleberry (or TB) is helping you tackle the access to AI"
 authors = [
     { name = "Torsten Raudßus", email = "torsten@raudssus.de" },
 ]
@@ -41,7 +41,7 @@ warn_return_any = true
 warn_unused_configs = true
 
 [tool.hatch.build.targets.wheel]
-packages = ["mcp"]
+packages = ["tackleberry"]
 
 [tool.pytest]
 testpaths = ["tests"]

@@ -1,10 +1,10 @@
 from typing import Any, Dict, Optional
 
-class MCPEngine:
+class TBEngine:
 
     def __init__(self):
         pass
 
     def model(self, model: str):
-        from ..model import MCPModel
-        return MCPModel(self, model)
+        from ..model import TBModel
+        return TBModel(self, model)
