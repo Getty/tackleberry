@@ -1,6 +1,6 @@
 [project]
 name = "tackleberry"
-version = "0.1.0.dev0"
+version = "0.1.0.dev1"
 description = "Tackleberry (or TB) is helping you tackle the access to AI"
 authors = [
     { name = "Torsten Raudßus", email = "torsten@raudssus.de" },
@@ -20,6 +20,11 @@ dev = [
     "black>=22.0.0",
     "isort>=5.0.0",
     "mypy>=1.0.0",
+    "openai",
+    "ollama",
+    "transformers",
+    "groq",
+    "anthropic",
 ]
 
 [build-system]

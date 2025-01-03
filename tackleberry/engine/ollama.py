@@ -11,15 +11,16 @@ class TBEngineOllama(TBEngine):
         url: str = None,
         **kwargs,
     ):
-        url = os.environ.get("OLLAMA_HOST")
-        userinfo = None
-        if os.environ.get("OLLAMA_PROXY_URL"):
-            if not url is None:
-                raise Exception("OLLAMA_PROXY_URL and OLLAMA_HOST set, please just use one")
-            else:
-                url = os.environ.get("OLLAMA_PROXY_URL")
+        if url is None:
+            url = os.environ.get("OLLAMA_HOST")
+            userinfo = None
+            if os.environ.get("OLLAMA_PROXY_URL"):
+                if not url is None:
+                    raise Exception("OLLAMA_PROXY_URL and OLLAMA_HOST set, please just use one")
+                else:
+                    url = os.environ.get("OLLAMA_PROXY_URL")
         if url:
-            parsed_url = urlparse(os.environ.get("OLLAMA_HOST"))
+            parsed_url = urlparse(url)
             if parsed_url.scheme in ["http", "https"] and parsed_url.netloc:
                 if "@" in parsed_url.netloc:
                     userinfo = parsed_url.netloc.split("@")[0]
@@ -30,7 +31,7 @@ class TBEngineOllama(TBEngine):
                     parsed_url = parsed_url._replace(netloc=netloc)
                 url = parsed_url.geturl()
             elif parsed_url.path:
-                url = 'http://'+parsed_url.path+'/'
+                url = parsed_url.scheme+'://'+parsed_url.path+'/'
             kwargs['host'] = url
         if userinfo:
             if not 'headers' in kwargs:

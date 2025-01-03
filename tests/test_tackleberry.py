@@ -1,10 +1,13 @@
 import unittest
 import warnings
 import os
+from unittest.mock import patch
+import requests
 from tackleberry import TB
 from tackleberry.engine import TBEngine
 from tackleberry.model import TBModel
 from tackleberry.context import TBContext, TBMessage
+from tackleberry.engine.ollama import TBEngineOllama
 
 class TestTB(unittest.TestCase):
 
@@ -15,7 +18,7 @@ class TestTB(unittest.TestCase):
         with self.assertRaises(KeyError):            
             model = TB.model('xxxxx')
 
-    def test_001_openai(self):
+    def test_010_openai(self):
         """Test OpenAI"""
         if os.environ.get("OPENAI_API_KEY"):
             engine = TB.engine('openai')
@@ -37,7 +40,7 @@ class TestTB(unittest.TestCase):
         else:
             warnings.warn("Can't test OpenAI engine without OPENAI_API_KEY", UserWarning)
     
-    def test_002_anthropic(self):
+    def test_020_anthropic(self):
         """Test Anthropic"""
         if os.environ.get("ANTHROPIC_API_KEY"):
             engine = TB.engine('anthropic')
@@ -59,7 +62,7 @@ class TestTB(unittest.TestCase):
         else:
             warnings.warn("Can't test Anthropic engine without ANTHROPIC_API_KEY", UserWarning)
     
-    def test_003_groq(self):
+    def test_030_groq(self):
         """Test Groq"""
         if os.environ.get("GROQ_API_KEY"):
             engine = TB.engine('groq')
@@ -81,7 +84,7 @@ class TestTB(unittest.TestCase):
         else:
             warnings.warn("Can't test Groq engine without GROQ_API_KEY", UserWarning)
 
-    def test_004_ollama(self):
+    def test_040_ollama(self):
         """Test Ollama"""
         if os.environ.get("OLLAMA_HOST") or os.environ.get("OLLAMA_PROXY_URL"):
             engine = TB.engine('ollama')
@@ -92,11 +95,38 @@ class TestTB(unittest.TestCase):
         else:
             warnings.warn("Can't test Ollama engine without explicit setting OLLAMA_HOST or OLLAMA_PROXY_URL", UserWarning)
 
-    def test_010_registry(self):
+    @patch('httpx.Client.send')
+    def test_041_ollama_userpass(self, mock_send):
+        """Test Ollama user pass to basic auth conversion"""
+        if os.environ.get("OLLAMA_HOST") or os.environ.get("OLLAMA_PROXY_URL"):
+            mock_response = unittest.mock.Mock()
+            mock_response.status_code = 200
+            mock_response.json.return_value = {"models": []}
+
+            mock_send.return_value = mock_response
+
+            engine = TBEngineOllama(
+                url = 'https://user:pass@domain.com:5000',
+            )
+            self.assertEqual(type(engine).__name__, "TBEngineOllama")
+
+            models = engine.get_models()
+
+            # Assert: Verify the request details
+            mock_send.assert_called_once()
+            request, kwargs = mock_send.call_args
+
+            self.assertEqual(request[0].method, 'GET')
+            self.assertEqual(request[0].url, 'https://domain.com:5000/api/tags')
+            self.assertEqual(request[0].headers['authorization'], 'Basic dXNlcjpwYXNz')
+        else:
+            warnings.warn("Can't test Ollama engine without explicit setting OLLAMA_HOST or OLLAMA_PROXY_URL", UserWarning)
+
+    def test_100_registry(self):
         """Test registry"""
         self.assertEqual(TB.count, 1)
 
-    def test_020_context(self):
+    def test_200_context(self):
         """Test context"""
         nosys_context = TB.context()
         self.assertIsInstance(nosys_context, TBContext)
