@@ -9,17 +9,22 @@ class TBMessage:
         self.content = content
 
 class TBMessageSystem(TBMessage):
-
+    """A system message"""
     def __init__(self, system_prompt: str):
         super().__init__(system_prompt, role="system")
 
-class TBMessageAssistant(TBMessage):
+class TBSystemPromptError(Exception):
+    """Error to throw if system prompt is not possible in the way as used."""
+    def __init__(self, message):
+        super().__init__(message)
 
+class TBMessageAssistant(TBMessage):
+    """An AI assistant message"""
     def __init__(self, assistant_context: str):
         super().__init__(assistant_context, role="assistant")
 
 class TBMessageUser(TBMessage):
-
+    """User message"""
     def __init__(self, user_message: str, role: Optional[str] = None):
         super().__init__(user_message, role if role is not None else "user")
 

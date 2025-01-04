@@ -1,10 +1,20 @@
-from typing import Any, Dict, Optional
+import os
+import importlib
 
-class TBEngine:
+# Special case: Explicitly import TBEngine from base.py
+from .base import TBEngine
 
-    def __init__(self):
-        pass
+# Automatically detect all Python files in the current directory
+current_dir = os.path.dirname(__file__)
+module_files = [
+    f for f in os.listdir(current_dir)
+    if f.endswith(".py") and f not in ("__init__.py", "base.py")
+]
 
-    def model(self, model: str):
-        from ..model import TBModel
-        return TBModel(self, model)
+# Create __all__ with the module names and the special case
+__all__ = ["TBEngine"] + [os.path.splitext(f)[0] for f in module_files]
+
+# Dynamically import the modules and add them to the global namespace
+for module_name in __all__[1:]:  # Skip "TBEngine" as it's already imported
+    module = importlib.import_module(f".{module_name}", package=__name__)
+    globals()[module_name] = module

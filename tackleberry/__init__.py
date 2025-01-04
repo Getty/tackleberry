@@ -1,5 +1,5 @@
 from importlib.metadata import version
-from .__main__ import TB
+from .main import TB
 
 __all__ = ['TB']
 

@@ -1,9 +1,8 @@
-from typing import Any, Union, Dict, List, Optional
 import os
 from urllib.parse import urlparse
 import base64
 
-from . import TBEngine
+from .base import TBEngine
 
 class TBEngineOllama(TBEngine):
 
