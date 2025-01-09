@@ -8,7 +8,7 @@ class TBModelChat(TBModel):
 
     def __init__(self,
         engine: TBEngine,
-        model_name_or_model: Union[str|TBModel],
+        model_name_or_model: Union[str, TBModel],
         context: TBContext = None,
         system_prompt: str = None,
         **kwargs,
