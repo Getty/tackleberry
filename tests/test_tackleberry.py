@@ -15,8 +15,10 @@ class TestTB(unittest.TestCase):
         """Test not existing Model and Engine"""
         with self.assertRaises(ModuleNotFoundError):
             engine = TB.engine('xxxxx')
-        with self.assertRaises(KeyError):            
+        with self.assertRaises(KeyError):
             model = TB.model('xxxxx')
+        with self.assertRaises(KeyError):
+            modelchat = TB.chat('xxxxx')
 
     def test_010_openai(self):
         """Test OpenAI"""
@@ -35,6 +37,9 @@ class TestTB(unittest.TestCase):
             self.assertEqual(type(model).__name__, "TBModel")
             self.assertIsInstance(model.engine, TBEngine)
             self.assertEqual(type(model.engine).__name__, "TBEngineOpenai")
+            modelchat = TB.chat('gpt-4o')
+            self.assertIsInstance(modelchat, TBModel)
+            self.assertEqual(type(modelchat).__name__, "TBModelChat")
             models = engine.get_models()
             self.assertTrue(len(models) > 20)
         else:
@@ -57,6 +62,9 @@ class TestTB(unittest.TestCase):
             self.assertEqual(type(model).__name__, "TBModel")
             self.assertIsInstance(model.engine, TBEngine)
             self.assertEqual(type(model.engine).__name__, "TBEngineAnthropic")
+            modelchat = TB.chat('claude-2.1')
+            self.assertIsInstance(modelchat, TBModel)
+            self.assertEqual(type(modelchat).__name__, "TBModelChat")
             models = engine.get_models()
             self.assertTrue(len(models) > 3)
         else:
@@ -79,6 +87,9 @@ class TestTB(unittest.TestCase):
             self.assertEqual(type(model).__name__, "TBModel")
             self.assertIsInstance(model.engine, TBEngine)
             self.assertEqual(type(model.engine).__name__, "TBEngineGroq")
+            modelchat = TB.chat('llama3-8b-8192')
+            self.assertIsInstance(modelchat, TBModel)
+            self.assertEqual(type(modelchat).__name__, "TBModelChat")
             models = engine.get_models()
             self.assertTrue(len(models) > 10)
         else:

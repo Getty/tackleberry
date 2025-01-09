@@ -43,6 +43,12 @@ class TBMain:
             raise Exception(f"Can't find engine for engine class '{engine_class}'")
         return engine.model(model)
 
+    def chat(self,
+        model: str,
+        **kwargs,
+    ):
+        return self.model(model).chat(**kwargs)
+
     def engine(self,
         engine_class: str,
         **kwargs,
