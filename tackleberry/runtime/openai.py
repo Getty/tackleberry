@@ -42,7 +42,7 @@ class TBRuntimeOpenai(TBRuntime):
                 model=chat.model.name,
                 messages=self.get_messages_from_context(context),
             )
-            return response.content
+            return response.choices[0].message.content
 
     def __str__(self):
         return f"TB Runtime OpenAI {hex(id(self))}"

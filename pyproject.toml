@@ -1,6 +1,6 @@
 [project]
 name = "tackleberry"
-version = "0.1.0"
+version = "0.1.1"
 description = "Tackleberry (or TB) is helping you tackle the access to AI"
 authors = [
     { name = "Torsten Raudßus", email = "torsten@raudssus.de" },
