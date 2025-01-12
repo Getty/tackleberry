@@ -15,6 +15,9 @@ openai_reply = openai_chat.query("Say test")
 claude_chat = TB.chat('claude-3-5-sonnet-20241022')
 claude_reply = claude_chat.query("Say test")
 
+groq_chat = TB.chat('gemma2-9b-it')
+groq_reply = groq_chat.query("Say test")
+
 # OLLAMA_PROXY_URL set for URL, can handle Basic Auth in URL
 ollama_chat = TB.chat('ollama/gemma2:2b')
 ollama_reply = ollama_chat.query("Say test")
@@ -30,6 +33,9 @@ ollama_user_info = ollama_chat.query("Extract the name and the age: 'John is 20 
 
 # Using instructor[anthropic]
 claude_user_info = claude_chat.query("Extract the name and the age: 'John is 20 years old'", UserInfo)
+
+# Using instructor[groq]
+groq_user_info = groq_chat.query("Extract the name and the age: 'John is 20 years old'", UserInfo)
 
 ```
 

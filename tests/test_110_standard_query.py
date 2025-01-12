@@ -42,7 +42,7 @@ class TestTB(unittest.TestCase):
     def test_040_ollama(self):
         """Test Ollama"""
         ollama_model = os.environ.get("TACKLEBERRY_OLLAMA_TEST_MODEL") or 'gemma2:2b'
-        if (os.environ.get("OLLAMA_HOST") or os.environ.get("OLLAMA_PROXY_URL")) and ollama_model:
+        if os.environ.get("OLLAMA_HOST") or os.environ.get("OLLAMA_PROXY_URL"):
             chat = TB.chat('ollama/'+ollama_model)
             test_resp = chat.query("Say test")
             self.assertIsInstance(test_resp, str)
