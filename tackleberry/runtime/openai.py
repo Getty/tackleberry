@@ -4,6 +4,8 @@ from .base import TBRuntime
 from ..context import TBContext
 from ..chat import TBChat
 
+from openai import OpenAI
+
 from pydantic import BaseModel
 
 class TBRuntimeOpenai(TBRuntime):
@@ -15,7 +17,6 @@ class TBRuntimeOpenai(TBRuntime):
         self.api_key = api_key or os.environ.get("OPENAI_API_KEY")
         if not isinstance(self.api_key, str) or len(self.api_key) < 51:
             raise Exception("OpenAI needs api_key (OPENAI_API_KEY)")
-        from openai import OpenAI
         self.client = OpenAI(
             api_key=self.api_key,
             **kwargs,

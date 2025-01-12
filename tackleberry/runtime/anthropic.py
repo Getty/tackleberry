@@ -4,6 +4,8 @@ from .base import TBRuntime
 from ..context import TBContext
 from ..chat import TBChat
 
+from anthropic import Anthropic
+
 import instructor
 from pydantic import BaseModel
 
@@ -18,7 +20,6 @@ class TBRuntimeAnthropic(TBRuntime):
         self.api_key = api_key or os.environ.get("ANTHROPIC_API_KEY")
         if not isinstance(self.api_key, str) or len(self.api_key) < 51:
             raise Exception(str(self)+" needs api_key (ANTHROPIC_API_KEY)")
-        from anthropic import Anthropic
         self.client = Anthropic(
             api_key=self.api_key,
             **kwargs,

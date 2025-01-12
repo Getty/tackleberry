@@ -8,6 +8,8 @@ from .base import TBRuntime
 from ..context import TBContext
 from ..chat import TBChat
 
+from ollama import Client as Ollama
+
 from pydantic import BaseModel
 
 class TBRuntimeOllama(TBRuntime):
@@ -47,7 +49,6 @@ class TBRuntimeOllama(TBRuntime):
             kwargs['headers']['Authorization'] = 'Basic '+auth_base64
         if not keep_alive is None:
             self.keep_alive = keep_alive
-        from ollama import Client as Ollama
         self.client = Ollama(
             **kwargs,
         )

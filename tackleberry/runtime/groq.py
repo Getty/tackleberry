@@ -4,6 +4,8 @@ from .base import TBRuntime
 from ..context import TBContext
 from ..chat import TBChat
 
+from groq import Groq
+
 import instructor
 from pydantic import BaseModel
 
@@ -16,7 +18,6 @@ class TBRuntimeGroq(TBRuntime):
         self.api_key = api_key or os.environ.get("GROQ_API_KEY")
         if not isinstance(self.api_key, str) or len(self.api_key) < 51:
             raise Exception("Groq needs api_key (GROQ_API_KEY)")
-        from groq import Groq
         self.client = Groq(
             api_key=self.api_key,
             **kwargs,
