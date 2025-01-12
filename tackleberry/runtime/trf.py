@@ -1,6 +1,6 @@
-from .base import TBEngine
+from .base import TBRuntime
 
-class TBEngineTrf(TBEngine):
+class TBRuntimeTrf(TBRuntime):
 
     def __init__(self,
         hf_token: str = None,
@@ -9,4 +9,4 @@ class TBEngineTrf(TBEngine):
         self.hf_token = hf_token
 
     def __str__(self):
-        return f"TB Engine HuggingFace transformers {hex(id(self))}"
+        return f"TB Runtime HuggingFace transformers {hex(id(self))}"

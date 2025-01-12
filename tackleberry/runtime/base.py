@@ -1,4 +1,6 @@
-class TBEngine:
+from ..context import TBContext
+
+class TBRuntime:
 
     def __init__(self):
         pass
@@ -14,5 +16,8 @@ class TBEngine:
         model: str,
         **kwargs,
     ):
-        from ..model import TBModelChat
-        return TBModelChat(self, model, **kwargs)
+        from ..chat import TBChat
+        return TBChat(self.model(model), **kwargs)
+
+    def get_messages_from_context(self, context: TBContext):
+        return context.to_messages()

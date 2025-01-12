@@ -3,7 +3,7 @@ from typing import Any, Dict, Optional, Union
 import copy
 
 class TBMessage:
-
+    """Base class for message"""
     def __init__(self, content: str, role: str):
         self.role = role
         self.content = content
@@ -29,7 +29,7 @@ class TBMessageUser(TBMessage):
         super().__init__(user_message, role if role is not None else "user")
 
 class TBContext:
-
+    """Combined messages as context"""
     def __init__(self, system_prompt: Optional[str] = None, user_query: Optional[str] = None):
         self.messages = []
         self.query = user_query
@@ -44,8 +44,11 @@ class TBContext:
         self.messages.append(TBMessageSystem(system_prompt))
         return self
 
-    def add_assistant(self, assistant_context: str):
-        self.messages.append(TBMessageAssistant(assistant_context))
+    def has_system(self):
+        return any(isinstance(message, TBMessageSystem) for message in self.messages)
+
+    def add_assistant(self, assistant_message: str):
+        self.messages.append(TBMessageAssistant(assistant_message))
         return self
 
     def add_user(self, user_message: str):
@@ -56,11 +59,11 @@ class TBContext:
         self.query = user_query
         return self
 
-    def spawn(self):
+    def copy(self):
         return copy.deepcopy(self)
 
-    def spawn_with(self, message: Union[TBMessage, 'TBContext']):
-        clone = self.spawn()
+    def copy_with(self, message: Union[TBMessage, 'TBContext']):
+        clone = self.copy()
         if isinstance(message, TBMessage):
             clone.add(message)
         elif isinstance(message, TBContext):
@@ -68,19 +71,19 @@ class TBContext:
                 clone.add(cmessage)
         return clone
 
-    def spawn_with_system(self, system_prompt: str):
-        return self.spawn_with(TBMessageSystem(system_prompt))
+    def copy_with_system(self, system_prompt: str):
+        return self.copy_with(TBMessageSystem(system_prompt))
 
-    def spawn_with_assistant(self, assistant_context: str):
-        return self.spawn_with(TBMessageAssistant(assistant_context))
+    def copy_with_assistant(self, assistant_context: str):
+        return self.copy_with(TBMessageAssistant(assistant_context))
 
-    def spawn_with_user(self, user_message: str):
-        return self.spawn_with(TBMessageUser(user_message))
+    def copy_with_user(self, user_message: str):
+        return self.copy_with(TBMessageUser(user_message))
 
-    def spawn_with_query(self, user_query: str):
-        return self.spawn().add_query(user_query)
+    def copy_with_query(self, user_query: str):
+        return self.copy().add_query(user_query)
 
-    def all_messages(self):
+    def get_messages(self):
         messages = self.messages
         if not self.query is None:
             messages.append(TBMessageUser(self.query))
@@ -88,7 +91,7 @@ class TBContext:
 
     def to_messages(self):
         message_list = []
-        for message in self.all_messages():
+        for message in self.get_messages():
             message_list.append({
                 "content": message.content,
                 "role": message.role,

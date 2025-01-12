@@ -2,7 +2,7 @@ from typing import Any, Dict, Optional
 from importlib import import_module
 
 from .registry import TBRegistry
-from .engine import TBEngine
+from .runtime import TBRuntime
 from .context import TBContext
 
 class TBMain:
@@ -16,7 +16,7 @@ class TBMain:
         TBMain.count += 1
         self.name = name or f'TB-{TBMain.count}'
         self.registry = registry if registry else TBMain.registry
-        self.engines = {}
+        self.runtimes = {}
 
     def __str__(self):
         return f"TBMain instance {self.name}"
@@ -32,16 +32,16 @@ class TBMain:
     ):
         model_parts = model.split('/')
         if len(model_parts) > 1:
-            engine_class = model_parts.pop(0)
+            runtime_class = model_parts.pop(0)
             model = '/'.join(model_parts)
         else:
-            engine_class = self.registry.get_engine_by_model(model)
-        if engine_class is None:
-            raise Exception(f"Can't find engine for model '{model}'")
-        engine = self.engine(engine_class, **kwargs)
-        if engine is None:
-            raise Exception(f"Can't find engine for engine class '{engine_class}'")
-        return engine.model(model)
+            runtime_class = self.registry.get_runtime_by_model(model)
+        if runtime_class is None:
+            raise Exception(f"Can't find runtime for model '{model}'")
+        runtime = self.runtime(runtime_class)
+        if runtime is None:
+            raise Exception(f"Can't find runtime for runtime class '{runtime_class}'")
+        return runtime.model(model, **kwargs)
 
     def chat(self,
         model: str,
@@ -49,24 +49,24 @@ class TBMain:
     ):
         return self.model(model).chat(**kwargs)
 
-    def engine(self,
-        engine_class: str,
+    def runtime(self,
+        runtime_class: str,
         **kwargs,
     ):
-        if engine_class in self.engines:
-            return self.engines[engine_class]
+        if runtime_class in self.runtimes:
+            return self.runtimes[runtime_class]
         try:
             from importlib import import_module
-            from_list = [f"TBEngine{engine_class.title()}"]
-            mod = import_module(f".engine.{engine_class}", package=__package__)
-            self.engines[engine_class] = getattr(mod, from_list[0])(**kwargs)
+            from_list = [f"TBRuntime{runtime_class.title()}"]
+            mod = import_module(f".runtime.{runtime_class}", package=__package__)
+            self.runtimes[runtime_class] = getattr(mod, from_list[0])(**kwargs)
         except ImportError:
-            mod = import_module(f"tackleberry.engine.{engine_class}")
-            self.engines[engine_class] = getattr(mod, f"TBEngine{engine_class.title()}")(**kwargs)
-        if isinstance(self.engines[engine_class], TBEngine):
-            return self.engines[engine_class]
+            mod = import_module(f"tackleberry.runtime.{runtime_class}")
+            self.runtimes[runtime_class] = getattr(mod, f"TBRuntime{runtime_class.title()}")(**kwargs)
+        if isinstance(self.runtimes[runtime_class], TBRuntime):
+            return self.runtimes[runtime_class]
         else:
-            raise Exception(f"Can't find engine '{engine_class}'")
+            raise Exception(f"Can't find runtime '{runtime_class}'")
 
 TB = TBMain()
 

@@ -3,14 +3,14 @@ import uuid
 import yaml
 import os
 
-from .engine import TBEngine
+from .runtime import TBRuntime
 
 class TBRegistry:
 
     def __init__(self, name: Optional[str] = None):
         if name is None:
             name = str(uuid.uuid4())
-        self._engines = {}
+        self._runtimes = {}
         self._update_models()
 
     def load_registry(self):
@@ -22,22 +22,22 @@ class TBRegistry:
     def _update_models(self):
         self._models = {}
         registry = self.load_registry()
-        for engine_name in self._engines:
-            # If the engine is in registry, then we delete it from there to not collide with the specific version
-            if engine_name in registry:
-                del registry[engine_name]
-            hasattr(self._engines[engine_name], 'get_models')
-            for model in self._engines[engine_name].get_models:
-                self._models[model] = engine_name
-        for registry_engine in registry:
-            for model in registry[registry_engine]:
-                self._models[model] = registry_engine
+        for runtime_name in self._runtimes:
+            # If the runtime is in registry, then we delete it from there to not collide with the specific version
+            if runtime_name in registry:
+                del registry[runtime_name]
+            hasattr(self._runtimes[runtime_name], 'get_models')
+            for model in self._runtimes[runtime_name].get_models:
+                self._models[model] = runtime_name
+        for registry_runtime in registry:
+            for model in registry[registry_runtime]:
+                self._models[model] = registry_runtime
 
-    def get_engine_by_model(self, model: str):
+    def get_runtime_by_model(self, model: str):
         return self._models[model]
 
-    def add_engine(self, name: str, engine: TBEngine = None):
-        self._engines[name] = engine
+    def add_runtime(self, name: str, runtime: TBRuntime = None):
+        self._runtimes[name] = runtime
         self._update_models()
         return self
 

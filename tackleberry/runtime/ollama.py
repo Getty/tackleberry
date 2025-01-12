@@ -2,12 +2,19 @@ import os
 from urllib.parse import urlparse
 import base64
 
-from .base import TBEngine
+from typing import Union
 
-class TBEngineOllama(TBEngine):
+from .base import TBRuntime
+from ..context import TBContext
+from ..chat import TBChat
+
+from pydantic import BaseModel
+
+class TBRuntimeOllama(TBRuntime):
 
     def __init__(self,
         url: str = None,
+        keep_alive: Union[float, str] = None,
         **kwargs,
     ):
         if url is None:
@@ -38,6 +45,8 @@ class TBEngineOllama(TBEngine):
             auth_bytes = userinfo.encode("utf-8")
             auth_base64 = base64.b64encode(auth_bytes).decode("utf-8")
             kwargs['headers']['Authorization'] = 'Basic '+auth_base64
+        if not keep_alive is None:
+            self.keep_alive = keep_alive
         from ollama import Client as Ollama
         self.client = Ollama(
             **kwargs,
@@ -50,5 +59,24 @@ class TBEngineOllama(TBEngine):
         models.sort()
         return models
 
+    def chat_context(self, chat: TBChat, context: TBContext, struct: BaseModel = None, **kwargs):
+        if struct is not None:
+            chat_kwargs = {
+                "model": chat.model.name,
+                "messages": self.get_messages_from_context(context),
+                "format": struct.model_json_schema(),
+            }
+            if hasattr(self, 'keep_alive'):
+                chat_kwargs["keep_alive"] = self.keep_alive
+            response = self.client.chat(**chat_kwargs, **kwargs)
+            return struct.model_validate_json(response.message.content)
+        else:
+            response = self.client.chat(
+                model=chat.model.name,
+                messages=self.get_messages_from_context(context),
+                **kwargs,
+            )
+            return response.message.content
+
     def __str__(self):
-        return f"TB Engine Ollama {hex(id(self))}"
+        return f"TB Runtime Ollama {hex(id(self))}"
