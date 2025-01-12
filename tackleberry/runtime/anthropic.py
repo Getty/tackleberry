@@ -48,7 +48,20 @@ class TBRuntimeAnthropic(TBRuntime):
                 max_tokens=self.max_tokens,
                 messages=self.get_messages_from_context(context),
             )
-            return response.content
+            text_blocks = []
+            for content in response.content:
+                text_blocks.append(self.content_to_text(content))
+            return '\n\n'.join(filter(None, text_blocks))
+
+    def content_to_text(self, content):
+        if content.type == 'text':
+            return content.text
+
+        elif content.type == 'code':
+            return f"```{content.language or ''}\n{content.text}\n```"
+
+        elif hasattr(content, 'text') and content.text:
+            return "["+content.type+"] "+content.text
 
     def __str__(self):
         return f"TB Runtime Anthropic {hex(id(self))}"

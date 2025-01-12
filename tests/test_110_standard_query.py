@@ -14,6 +14,8 @@ class TestTB(unittest.TestCase):
         if os.environ.get("OPENAI_API_KEY"):
             chat = TB.chat('openai/gpt-4o-mini')
             test_resp = chat.query("Say test")
+            self.assertIsInstance(test_resp, str)
+            self.assertTrue(len(test_resp) > 0, "String shouldn't be empty")
         else:
             warnings.warn("Can't test OpenAI runtime without OPENAI_API_KEY", UserWarning)
     
@@ -22,6 +24,8 @@ class TestTB(unittest.TestCase):
         if os.environ.get("ANTHROPIC_API_KEY"):
             chat = TB.chat('anthropic/claude-3-5-haiku-20241022')
             test_resp = chat.query("Say test")
+            self.assertIsInstance(test_resp, str)
+            self.assertTrue(len(test_resp) > 0, "String shouldn't be empty")
         else:
             warnings.warn("Can't test Anthropic runtime without ANTHROPIC_API_KEY", UserWarning)
     
@@ -30,6 +34,8 @@ class TestTB(unittest.TestCase):
         if os.environ.get("GROQ_API_KEY"):
             chat = TB.chat('groq/llama3-8b-8192')
             test_resp = chat.query("Say test")
+            self.assertIsInstance(test_resp, str)
+            self.assertTrue(len(test_resp) > 0, "String shouldn't be empty")
         else:
             warnings.warn("Can't test Groq runtime without GROQ_API_KEY", UserWarning)
 
@@ -39,6 +45,8 @@ class TestTB(unittest.TestCase):
         if (os.environ.get("OLLAMA_HOST") or os.environ.get("OLLAMA_PROXY_URL")) and ollama_model:
             chat = TB.chat('ollama/'+ollama_model)
             test_resp = chat.query("Say test")
+            self.assertIsInstance(test_resp, str)
+            self.assertTrue(len(test_resp) > 0, "String shouldn't be empty")
         else:
             warnings.warn("Can't test Ollama runtime without explicit setting OLLAMA_HOST or OLLAMA_PROXY_URL", UserWarning)
 

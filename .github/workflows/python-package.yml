@@ -40,5 +40,10 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
     - name: Test with pytest
+      env:
+        ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        GROQ_API_KEY:      ${{ secrets.GROQ_API_KEY }}
+        OLLAMA_PROXY_URL:  ${{ secrets.OLLAMA_PROXY_URL }}
+        OPENAI_API_KEY:    ${{ secrets.OPENAI_API_KEY }}
       run: |
         pytest

@@ -25,8 +25,8 @@ class TBRuntimeOllama(TBRuntime):
                     raise Exception("OLLAMA_PROXY_URL and OLLAMA_HOST set, please just use one")
                 else:
                     url = os.environ.get("OLLAMA_PROXY_URL")
-        if url:
-            parsed_url = urlparse(url)
+        parsed_url = urlparse(url)
+        if parsed_url.scheme:
             if parsed_url.scheme in ["http", "https"] and parsed_url.netloc:
                 if "@" in parsed_url.netloc:
                     userinfo = parsed_url.netloc.split("@")[0]
