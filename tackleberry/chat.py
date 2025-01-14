@@ -22,7 +22,7 @@ class TBChat:
             self.model = model_name_or_model
         else:
             from . import TB
-            self.model = TB.model(model_name_or_model)
+            self.model = TB.model(model_name_or_model, **kwargs)
         self.struct = struct
         self.context = context if context is not None else TBContext()
         if system_prompt is not None:

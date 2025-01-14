@@ -12,7 +12,11 @@ dependencies = [
 ]
 requires-python = ">=3.10"
 readme = "README.md"
-license = {text = "MIT"}
+license = { text = "MIT" }
+
+[tool.project.metadata]
+company = "conflict.industries"
+company_url = "https://conflict.industries"
 
 [project.optional-dependencies]
 dev = [
@@ -30,6 +34,7 @@ dev = [
     "instructor[groq]",
     "anthropic",
     "instructor[anthropic]",
+    "mistralai",
 ]
 ollama = [
     "ollama",
@@ -44,6 +49,10 @@ openai = [
 groq = [
     "groq",
     "instructor[groq]",
+]
+mistral = [
+    "mistralai",
+    "instructor",
 ]
 
 [build-system]

@@ -75,3 +75,5 @@ openai:
 - tts-1-hd
 - tts-1-hd-1106
 - whisper-1
+mistral:
+- open-mistral-nemo

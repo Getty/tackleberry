@@ -2,8 +2,6 @@ import os
 from urllib.parse import urlparse
 import base64
 
-from typing import Union
-
 from .base import TBRuntime
 from ..context import TBContext
 from ..chat import TBChat
@@ -16,7 +14,6 @@ class TBRuntimeOllama(TBRuntime):
 
     def __init__(self,
         url: str = None,
-        keep_alive: Union[float, str] = None,
         **kwargs,
     ):
         if url is None:
@@ -47,8 +44,6 @@ class TBRuntimeOllama(TBRuntime):
             auth_bytes = userinfo.encode("utf-8")
             auth_base64 = base64.b64encode(auth_bytes).decode("utf-8")
             kwargs['headers']['Authorization'] = 'Basic '+auth_base64
-        if not keep_alive is None:
-            self.keep_alive = keep_alive
         self.client = Ollama(
             **kwargs,
         )
@@ -67,8 +62,6 @@ class TBRuntimeOllama(TBRuntime):
                 "messages": self.get_messages_from_context(context),
                 "format": struct.model_json_schema(),
             }
-            if hasattr(self, 'keep_alive'):
-                chat_kwargs["keep_alive"] = self.keep_alive
             response = self.client.chat(**chat_kwargs, **kwargs)
             return struct.model_validate_json(response.message.content)
         else:

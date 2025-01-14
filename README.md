@@ -18,6 +18,9 @@ claude_reply = claude_chat.query("Say test")
 groq_chat = TB.chat('gemma2-9b-it')
 groq_reply = groq_chat.query("Say test")
 
+mistral_chat = TB.chat('open-mistral-nemo')
+mistral_reply = mistral_chat.query("Say test")
+
 # OLLAMA_PROXY_URL set for URL, can handle Basic Auth in URL
 ollama_chat = TB.chat('ollama/gemma2:2b')
 ollama_reply = ollama_chat.query("Say test")
